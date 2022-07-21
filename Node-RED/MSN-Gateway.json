@@ -1,0 +1,120 @@
+[
+    {
+        "id": "f8f0a28e83848581",
+        "type": "tab",
+        "label": "Micro:bit Sensor Network",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "b795fc2299f6206c",
+        "type": "serial in",
+        "z": "f8f0a28e83848581",
+        "name": "",
+        "serial": "883be403bed1aaad",
+        "x": 230,
+        "y": 400,
+        "wires": [
+            [
+                "2a5975abc012c3ac"
+            ]
+        ]
+    },
+    {
+        "id": "2a5975abc012c3ac",
+        "type": "json",
+        "z": "f8f0a28e83848581",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 430,
+        "y": 400,
+        "wires": [
+            [
+                "bc0cb729b6cfe5a1"
+            ]
+        ]
+    },
+    {
+        "id": "02b4f6d759e1eeef",
+        "type": "websocket out",
+        "z": "f8f0a28e83848581",
+        "name": "",
+        "server": "2bfaf6a2f7839417",
+        "client": "",
+        "x": 970,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "5645b1169c0b2bcc",
+        "type": "debug",
+        "z": "f8f0a28e83848581",
+        "name": "debug 1",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 940,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "bc0cb729b6cfe5a1",
+        "type": "change",
+        "z": "f8f0a28e83848581",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.timeStamp",
+                "pt": "msg",
+                "to": "$now()",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 680,
+        "y": 400,
+        "wires": [
+            [
+                "02b4f6d759e1eeef",
+                "5645b1169c0b2bcc"
+            ]
+        ]
+    },
+    {
+        "id": "883be403bed1aaad",
+        "type": "serial-port",
+        "serialport": "/dev/ttyACM0",
+        "serialbaud": "57600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "\\n",
+        "responsetimeout": "0"
+    },
+    {
+        "id": "2bfaf6a2f7839417",
+        "type": "websocket-listener",
+        "path": "/ws/message",
+        "wholemsg": "false"
+    }
+]

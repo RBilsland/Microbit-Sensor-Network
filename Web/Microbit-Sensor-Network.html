@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Micro:bit Sensor Network</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.0/dist/chartjs-adapter-moment.js"></script>
+        <script>
+            const wsServerURL = "ws://virtualoverbury:1880/";
+
+            let maxTimeout = 16000;
+        
+            var wsMessageTimeout = 250;
+            var messages = [];
+            
+            function onLoad() {
+                wsMessageConnect();
+            }
+            
+            function wsMessageConnect() {
+                let wsMessage = new WebSocket(wsServerURL + "ws/message");
+
+                wsMessage.onopen = function() {
+                    wsMessageTimeout = 250;
+                };
+                
+                wsMessage.onmessage = function(event) {
+                    let receivedMessage = JSON.parse(event.data);
+                    let messageConfig = configLookup(receivedMessage.name);
+
+                    var filteredMessage;
+                    let filteredMessages = messages.filter(message => message.name == receivedMessage.name);
+                    
+                    if (filteredMessages.length == 0) {
+                        filteredMessage = {
+                            name: receivedMessage.name,
+                            fullName: messageConfig.fullName,
+                            value: undefined,
+                            timeStamp: undefined,
+                            historyBuffer: [],
+                            valueElement: undefined,
+                            chartElement: undefined
+                        };
+                        
+                        messages.push(filteredMessage);
+                    } else {
+                        filteredMessage = filteredMessages[0];
+                    }
+                    
+                    filteredMessage.value = receivedMessage.value;
+                    filteredMessage.timeStamp = new Date(receivedMessage.timeStamp);
+                    filteredMessage.historyBuffer.push({
+                        value: receivedMessage.value,
+                        timeStamp: new Date(receivedMessage.timeStamp),
+                    });
+                    
+                    while (filteredMessage.historyBuffer.length > messageConfig.maxBufferSize) {
+                        filteredMessage.historyBuffer.shift();
+                    }
+                    
+                    updateDisplay(filteredMessage, messageConfig);
+                }
+
+                wsMessage.onclose = function (event) {
+                    if (wsMessageTimeout <= maxTimeout) {
+                        setTimeout(function() {
+                            wsMessageConnect();
+                        }, wsMessageTimeout);
+                        
+                        wsMessageTimeout *= 2;
+                    }
+                }
+            }
+
+            function updateDisplay(message, messageConfig) {
+                document.getElementById("waitingForData").style.display = "none";
+
+                var accordion = document.getElementById("accordion");
+
+                if (message.valueElement == undefined) {
+                    var accordionItem = createElementAndAttributes("div", [{name: "class", value: "accordion-item"}]);
+                    accordion.appendChild(accordionItem);
+                    
+                    var accordionHeader = createElementAndAttributes("div", [{name: "class", value: "accordion-header"}, {name: "id", value: "panelsStayOpen-heading" + message.name}]);
+                    accordionItem.appendChild(accordionHeader);
+                    
+                    var accordionButton = createElementAndAttributes("div", [{name: "class", value: "accordion-button text-dark"}, {name: "type", value: "button"}, {name: "data-bs-toggle", value: "collapse"}, {name: "data-bs-target", value: "#panelsStayOpen-collapse" + message.name}, {name: "aria-expanded", value: "true"}, {name: "aria-controls", value: "panelsStayOpen-collapse" + message.name}]);
+                    accordionHeader.appendChild(accordionButton);
+                    
+                    var container = createElementAndAttributes("div", [{name: "class", value: "container"}]);
+                    accordionButton.appendChild(container);
+                    
+                    var rowHeadings = createElementAndAttributes("div", [{name: "class", value: "row"}]);
+                    container.appendChild(rowHeadings);
+                    
+                    var colNameTitle = createElementAndAttributes("div", [{name: "class", value: "col-4"}]);
+                    colNameTitle.innerText = "Name:";
+                    rowHeadings.appendChild(colNameTitle);
+
+                    var colValueTitle = createElementAndAttributes("div", [{name: "class", value: "col-4"}]);
+                    colValueTitle.innerText = "Value:";
+                    rowHeadings.appendChild(colValueTitle);
+
+                    var colTimeStampTitle = createElementAndAttributes("div", [{name: "class", value: "col-4"}]);
+                    colTimeStampTitle.innerText = "Time Stamp:";
+                    rowHeadings.appendChild(colTimeStampTitle);
+
+                    var rowValues = createElementAndAttributes("div", [{name: "class", value: "row"}]);
+                    container.appendChild(rowValues);
+                    
+                    var colNameValue = createElementAndAttributes("div", [{name: "class", value: "col-4"}]);
+                    colNameValue.innerText = message.fullName;
+                    rowValues.appendChild(colNameValue);
+
+                    var colValueValue = createElementAndAttributes("div", [{name: "class", value: "col-4"}]);
+                    message.valueElement = colValueValue;
+                    rowValues.appendChild(colValueValue);
+
+                    var colTimeStampValue = createElementAndAttributes("div", [{name: "class", value: "col-4"}]);
+                    message.timeStampElement = colTimeStampValue;
+                    rowValues.appendChild(colTimeStampValue);
+
+                    var accordionCollapse = createElementAndAttributes("div", [{name: "class", value: "accordion-collapse collapse"}, {name: "id", value: "panelsStayOpen-collapse" + message.name}, {name: "aria-labelledby", value: "panelsStayOpen-heading" + message.name}]);
+                    accordionItem.appendChild(accordionCollapse);
+                    
+                    var accordionBody = createElementAndAttributes("div", [{name: "class", value: "accordion-body"}]);
+                    accordionCollapse.appendChild(accordionBody);
+                    
+                    var canvas = document.createElement("canvas");
+                    accordionBody.appendChild(canvas);
+
+                    var scaleY = {
+                        title: {
+                            display: true,
+                            text: messageConfig.valueUnit
+                        }
+                    };
+                    
+                    if (typeof messageConfig.minValue == 'number') {
+                        scaleY.min = messageConfig.minValue;
+                    }
+                    
+                    if (typeof messageConfig.maxValue == 'number') {
+                        scaleY.max = messageConfig.maxValue;
+                    }
+                    
+                    const canvasContext = canvas.getContext("2d");
+                    const chart = new Chart(canvasContext, {
+                        type: "line",
+                        options: {
+                            scales: {
+                                x: {
+                                    type: "time",
+                                    time: {
+                                        displayFormats: {
+                                            seconds: "h:mm:ssa"
+                                        },
+                                        unit: "seconds"
+                                    }
+                                },
+                                y: scaleY
+                            },
+                            animation: false,
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    display: false
+                                },
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    enabled: true
+                                }
+                            },
+                            parsing: {
+                                xAxisKey: "timeStamp",
+                                yAxisKey: "value"
+                            }
+                        },
+                        data: {
+                            datasets: [{
+                                borderColor: messageConfig.lineColour,
+                                data: message.historyBuffer,
+                                cubicInterpolationMode: "monotone",
+                                tension: 0.4
+                            }]
+                        }
+                    });
+                    message.chartElement = chart;
+
+                    var rowHorizontalRule = createElementAndAttributes("div", [{name: "class", value: "row"}]);
+                    
+                    var colHorizontalRule = createElementAndAttributes("div", [{name: "class", value: "col-12"}]);
+                    rowHorizontalRule.appendChild(colHorizontalRule);
+                    
+                    var horizontalRule = document.createElement("hr");
+                    colHorizontalRule.appendChild(horizontalRule);
+                }
+                
+                message.valueElement.innerText = message.value + messageConfig.valueUnit;
+                message.timeStampElement.innerText = message.timeStamp.toLocaleString();
+                message.chartElement.update();
+            }
+            
+            function createElementAndAttributes(elementName, attributes) {
+                if (!Array.isArray(attributes)) {
+                    attributes = [attributes];
+                }
+
+                var newElement = document.createElement(elementName);
+
+                attributes.forEach(attribute => {
+                    var newAttribute = document.createAttribute(attribute.name);
+                    newAttribute.value = attribute.value;
+                    newElement.setAttributeNode(newAttribute);
+                })
+                
+                return newElement;
+            }
+            
+            function configLookup(name) {
+                /*
+                The section below is configurable for each message name.
+
+                Message names can only be a maximum of 8 characters (a Micro:bit limitation).
+                The names displayed are the associated full names.
+                Colours are in RGB hexidecimal format.
+                If the min / max values are left undefined then the charts will automatically size themselves.
+                The max buffer size is the number of values displayed on the chart before being scrolled.
+                Any values not overriden will just fall back to the default values at the top.
+                */
+
+                var config = {
+                    fullName: "Unknown (" + name + ")",
+                    lineColour: "#000000",
+                    minValue: undefined,
+                    maxValue: undefined,
+                    valueUnit: "",
+                    maxBufferSize: 30
+                }
+
+                switch(name.toLowerCase()) {
+                    case "accelera":
+                        config.fullName = "Acceleration";
+                        config.lineColour = "#FF0000";
+                        config.minValue = -3500;
+                        config.maxValue = 3500;
+                        config.valueUnit = "mg";
+                        config.maxBufferSize = 100;
+                        break;
+                    case "lightlev":
+                        config.fullName = "Light Level";
+                        config.lineColour = "#00FF00";
+                        config.minValue = 0;
+                        config.maxValue = 255;
+                        config.maxBufferSize = 50;
+                        break;
+                    case "temperat":
+                        config.fullName = "Temperature";
+                        config.lineColour = "#0000FF";
+                        config.minValue = -5;
+                        config.maxValue = 50;
+                        config.valueUnit = "°C";
+                        break;
+                }
+                
+                return config;
+            }
+        </script>
+    </head>
+    <body onload="onLoad();">
+        <h3 class="text-center">Micro:bit Sensor Network</h3>
+        <div id="waitingForData" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);">
+            <h1 class="align-self-center">Waiting for Data.</h1>
+        </div>
+        <div id="accordion" class="accordion static-colours"></div>
+    </body>
+</html>
