@@ -1,4 +1,4 @@
-# Micro:bit Sensor Network  
+# Micro:bit Sensor Network (v1.0)
 Welcome to the Micro:bit Sensor Network (MbSN), a way to let chrilden play and explore the idea of using Micro:bits as remote devices to capture and share their inputs in realtime. These inputs are then able to be displayed numerically and as charts wirelessly and in realtime using a Raspberry Pi. 
 
 ## Why?
