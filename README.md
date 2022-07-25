@@ -65,7 +65,7 @@ It is also useful to have Node-RED automatically start when the Raspberry Pi is 
 
 	sudo systemctl enable nodered.service
 	
-or to stop this from happening run the following command:
+To stop this from happening run the following command:
 
 	sudo systemctl disable nodered.service
 
