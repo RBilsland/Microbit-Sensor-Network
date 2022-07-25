@@ -49,3 +49,26 @@ After redirecting the serial connection to be over USB, setting the serial baud 
 ### Node-RED
 
 ![MbSN Node-RED](Images/MbSN-Node-RED.png "MbSN Node-RED")
+
+Whether Node-RED is or isn't already is already installed on your Raspberry Pi doesn't matter as the script provided can perform both installs and updates. Even if you believe you have Node-RED full setup on your Raspberry Pi it could still be worth checking as recently they have released version 3. If you have any issues installing or updating you can find further help at Node-REDs [Running on Raspberry Pi](https://nodered.org/docs/getting-started/raspberrypi "Running on Raspberry Pi") guide.
+
+As the Node-RED interface is viewed in a browser the following command can either be run through an SSH connection to the Raspberry Pi or through a terminal window from the desktop.
+
+	bash <(curl -sL https://raw.githubusercontent.com/node-red/linux-installers/master/deb/update-nodejs-and-nodered)
+	
+Once the script has run successfully you will have the latest version of Node-RED installed and as part of the process the following commands have been installed to help manage the running of Node-RED.
+
+- `node-red-start` - this starts the Node-RED service and displays its log output. Pressing Ctrl-C or closing the window does not stop the service; it keeps running in the background
+- `node-red-stop` - this stops the Node-RED service
+- `node-red-restart` - this stops and restarts the Node-RED service
+- `node-red-log` - this displays the log output of the service
+
+It is also useful to have Node-RED automatically start when the Raspberry Pi is turned on or is re-booted. To make this happen run the following command:
+
+	sudo systemctl enable nodered.service
+	
+or to stop this from happening run the following command:
+
+	sudo systemctl disable nodered.service
+
+		 
