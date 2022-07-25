@@ -69,5 +69,28 @@ or to stop this from happening run the following command:
 
 	sudo systemctl disable nodered.service
 
-![MbSN Node-RED](Images/MbSN-Node-RED.png "MbSN Node-RED")
+**BEFORE PERFORMING THE FOLLOWING STEPS MAKE SURE YOU HAVE CONNECTED YOUR "GATEWAY" MICRO:BIT TO THE RASPBERRY PI**
 
+Once you have everything running then open a browser and either visit http://localhost:1880 if you are using your Raspberry Pi to surf the Internet or visit http://<The Name of your Raspberry Pi>:1880 if you are using another machine on your network (making sure you replace <The Name of your Raspberry Pi> with the name of your Raspberry Pi. If everything is working correctly they you should be presented with a page looking like below.
+
+![MbSN Empty Node RED](Images/MbSN-NodeRED-1.png "MbSN Empty Node RED")
+
+From here click the hamburger menu (the three horizontal lines) in the top right to open the drop down menu and then choose to import.
+
+![MbSN Node RED Drop Down Menu](Images/MbSN-NodeRED-2.png "MbSN Node RED Drop Down Menu")
+
+From the import dialog choose to select a file to import and select this file, [MbSN-Gateway.json](Node-RED/MbSN-Gateway.json "MbSN-Gateway.json"), once you have downloaded it to your machine.
+
+![MbSN Node RED Empty Import Dialog](Images/MbSN-NodeRED-3.png "MbSN Node RED Empty Import Dialog")
+
+Once the import dialog is showing the contents of the file choose to import the file.
+
+![MbSN Node RED Populated Import Dialog](Images/MbSN-NodeRED-4.png "MbSN Node RED Populated Import Dialog")
+
+Once imported the following flow should be shown in the browser. Starting with the left most node the first node receives message from the "gateway" Micro:bit over the serial connection. This in turn passes the message to a node that converts the JSON string into a JSON object so it's contents can be easily accessed. Moving again to the right this node adds a time stamp to the message object as Micro:bits don't have internal clocks so that it can be seen when each message was received. Taking the final node directly to it's right this node now takes the message object and send it over a WebSocket to any processes connected to it. The green node directly above this final node is for debug purposes and will show what messages are being sent over the WebSocket. In it's current state it is disabled. This flow is also not ready to be used as once any changes have been made in the browser they have to be deployed to make them available. From here click the top right red deploy button. 
+
+![MbSN Node RED Imported Flow](Images/MbSN-NodeRED-5.png "MbSN Node RED Imported Flow")
+
+Once deployed you should see a momentary message appear at the top center of the browser window stating so. Once this has been done it is ready to pass messages on from the "gateway" Micro:bit to be displayed numerically and as charts.
+
+![MbSN Node RED Deployed Flow](Images/MbSN-NodeRED-6.png "MbSN Node RED Deployed Flow")
