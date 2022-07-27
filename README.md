@@ -70,7 +70,7 @@ To stop this from happening run the following command:
 
 ####**BEFORE PERFORMING THE FOLLOWING STEPS MAKE SURE YOU HAVE CONNECTED YOUR *GATEWAY* MICRO:BIT TO THE RASPBERRY PI**
 
-Once you have everything running then open a browser and visit either http://localhost:1880 if you are using your Raspberry Pi or ttp://\<The Name of your Raspberry Pi\>:1880 if you are using another machine on the same network. If everything has worked correctly you should be presented with the page below.
+Once you have everything running then open a browser and visit either http://localhost:1880 if you are using your Raspberry Pi or http://\<The Name of your Raspberry Pi\>:1880 if you are using another machine on the same network. If everything has worked correctly you should be presented with the page below.
 
 ![MbSN Empty Node RED](Images/MbSN-NodeRED-1.png "MbSN Empty Node RED")
 
@@ -86,19 +86,18 @@ Once the import dialog is showing the contents of the file choose to import the 
 
 ![MbSN Node RED Populated Import Dialog](Images/MbSN-NodeRED-4.png "MbSN Node RED Populated Import Dialog")
 
-Once imported the following flow should be shown in the browser. Starting with the left most node, this receives message from the *gateway* Micro:bit over the serial connection. This in turn passes the message to a node that converts the JSON string into a JSON object so it's contents can be easily accessed. Moving again to the right this node adds a time stamp to the message object as Micro:bits don't have internal clocks so that it can be seen when each message was received. The final node directly to it's right takes the message object and send it over a WebSocket to processes connected to it. In this case the process connected to it will be a browser page.
+Once imported the following flow should be shown in the browser. Starting with the left most node, this receives information from the *gateway* Micro:bit over the serial connection. This in turn passes the information to a node that converts string received into an object that's contents can be easily accessed. Moving again to the right this node adds a time stamp to the information object as Micro:bits don't have internal clocks so that it can be seen when each piece of information was received. The final node directly to it's right takes the information object and sends it over a WebSocket to processes connected to it. In this case the process connected to it will be a browser page.
 
 ![MbSN Node RED Deployed Flow](Images/MbSN-NodeRED-5.png "MbSN Node RED Deployed Flow")
 
-This flow is also not ready to be used as once any changes have been made in the browser they have to be deployed to make them available. From here click the top right red deploy button. You should see a momentary message appear at the top center letting you know the deployment was successful. It is ready to pass messages on from the *gateway* Micro:bit to be displayed numerically and as charts.
+This flow is also not ready to be used as once any changes have been made in the browser they have to be deployed to make them available. From here click the top right red Deploy button. You should see a momentary message appear at the top center letting you know the deployment was successful. It is ready to pass messages on from the *gateway* Micro:bit to be displayed numerically and as charts.
 
 ![MbSN Node RED Imported Flow](Images/MbSN-NodeRED-6.png "MbSN Node RED Imported Flow")
 
-
 ####Issues
 
-#####The *Gateway* Micro:bit is showing as "not connected"
-![MbSN Node RED Imported Flow](Images/MbSN-NodeRED-7.png "MbSN Node RED Imported Flow")
+#####The *Gateway* Micro:bit is Showing as "not connected"
+![MbSN Node RED Serial Not Connected](Images/MbSN-NodeRED-7.png "MbSN Node RED Serial Not Connected")
 
 This is usally caused by the Raspberry Pi loading the Micro:bit's serial port as a different device address to the one defined in the Node-RED flow imported. If this has happend it's just a process of finding what the correct device address is. First open up an SSH connection to your Raspberry Pi or a terminal window from the desktop and enter the following commands.
 
@@ -109,7 +108,36 @@ This should return a line similar to the output below and the important bit is t
 
 `lrwxrwxrwx 1 root root 13 Jul 25 22:47 usb-ARM\_\_BBC\_micro:bit\_CMSIS-DAP\_\_9904360254174e45000b000400000050000000009796990b-if01 -> ../../ttyACM0`
 
-As the first command we issued above was to change directory (cd) to /dev/serial/by-id the two sets of .. each tell us to go back up a directory leaving us with /dev which we add on /ttyACM0. This gives us a device address of /dev/ttyACM0.
+As the first command we issued above was to change directory (cd) to /dev/serial/by-id the two sets of .. in the final text each tell us to go back up a directory leaving us with /dev to which we add /ttyACM0. This gives us a device address of /dev/ttyACM0.
 
-The green node directly above this final node is for debug purposes and will show what messages are being sent over the WebSocket. It's current state is disabled so won't produce any debug output. 
+Next we double click the first node in the flow which receives messages from the *Gateway" Micro:bit to bring up it's properties.
+
+![MbSN Node RED Serial Properties](Images/MbSN-NodeRED-8.png "MbSN Node RED Serial Properties")
+
+In the properties panel that has appeared on the right click the pencil edit icon to the right of the Serial Port dropdown menu to edit this serial connection.
+
+![MbSN Node RED Edit Serial Properties](Images/MbSN-NodeRED-9.png "MbSN Node RED Edit Serial Properties")
+ 
+Now updated the Serial Port to be the /dev/... that you identified above. Go back to the flow view by clicking the red Updated and then Done buttons. Finally remember to deploy your changes by clicking the red Deploy button. Hopefully by this point your serial node should be showing connected.
+
+#####No Information is Being Shown in the Browser
+If this is happening then there is a debug node directly above the final node in the flow that will display all the information being received into a debug window. First thing to check is that the visual indicators on both the *Sensor* and *Gateway* Micro:bits are toggling. If the *Sensor* isn't showing check the frequency of the information being sent, is it too long? If the *Gateway* isn't showing check the Radio Groups group being used, are the *Sensor* and *Gateway* are using the same? If both are toggling then we can see what messages are being received.
+
+First hover you mouse over the middle right hand edge of the flow window in the browser and a tab should pop out, click this tab.
+
+![MbSN Node RED Edit Serial Properties](Images/MbSN-NodeRED-10.png "MbSN Node RED Edit Serial Properties")
+
+Now with the right hand panel visible click the little insect / bug icon in the top of it so that it shows debug information.
+
+![MbSN Node RED Edit Serial Properties](Images/MbSN-NodeRED-11.png "MbSN Node RED Edit Serial Properties")
+
+Next on the right hand end of the green debug node there appear to be a little grey button half sticking out from behind it. Click this button.
+
+![MbSN Node RED Edit Serial Properties](Images/MbSN-NodeRED-12.png "MbSN Node RED Edit Serial Properties")
+
+Once clicked the button will popout and change from grey to the same green as the rest of the debug button.
+
+![MbSN Node RED Edit Serial Properties](Images/MbSN-NodeRED-13.png "MbSN Node RED Edit Serial Properties")
+
+From here any information that is being sent to the WebSocket node is also sent to the Debug node. Hopefully this will give you an insight to what information is / isn't being sent.
 
