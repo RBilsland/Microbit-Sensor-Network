@@ -15,7 +15,7 @@
 		- [The Gateway Micro:bit](#the-gateway-microbit "The Gateway Micro:bit")
 		- [Node-RED](#node-red "Node-RED")
 			- [Issues](#issues "Issues")
-				- [The *Gateway* Micro:bit is Showing as "not connected"](#the-gateway-microbit-is-showing-as-not-connected "The *Gateway* Micro:bit is Showing as "not connected")
+				- [The *Gateway* Micro:bit is Showing as \"not connected\"](#the-gateway-microbit-is-showing-as-not-connected "The *Gateway* Micro:bit is Showing as \"not connected\"")
 				- [No Information is Being Shown in the Browser](#no-information-is-being-shown-in-the-browser "No Information is Being Shown in the Browser")
 		- [Browser Based Front-end](#browser-based-front-end "Browser Based Front-end")
 	- [Everything Working](#everything-working "Everything Working")
