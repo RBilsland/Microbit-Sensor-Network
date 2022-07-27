@@ -1,16 +1,22 @@
 # Micro:bit Sensor Network (v1.0)
 
-Contents
+**Contents**
 
 - [Micro:bit Sensor Network (v1.0)](#microbit-sensor-network-v10 "Micro:bit Sensor Network (v1.0)")
 	- [Why](#why "Why")
 	- [The Future](#the-future "The Future")
-- []( "")
+- [The Setup](#the-setup "The Setup")
 	- [Hardware Design](#hardware-design "Hardware Design")
 	- [Software Stack](#software-stack "Software Stack")
 		- [The Sensor Micro:bits](#the-sensor-microbits "The Sensor Micro:bits")
+			- [Acceleration](#acceleration "Acceleration")
+			- [Light Level](#light-level "Light Level")
+			- [Temperature](#temperature "Temperature")
 		- [The Gateway Micro:bit](#the-gateway-microbit "The Gateway Micro:bit")
 		- [Node-RED](#node-red "Node-RED")
+			- [Issues](#issues "Issues")
+				- [The *Gateway* Micro:bit is Showing as "not connected"](#the-gateway-microbit-is-showing-as-not-connected "The *Gateway* Micro:bit is Showing as "not connected")
+				- [No Information is Being Shown in the Browser](#no-information-is-being-shown-in-the-browser "No Information is Being Shown in the Browser")
 		- [Browser Based Front-end](#browser-based-front-end "Browser Based Front-end")
 	- [Everything Working](#everything-working "Everything Working")
 
@@ -109,9 +115,9 @@ This flow is also not ready to be used as once any changes have been made in the
 
 ![MbSN Node RED Imported Flow](Images/MbSN-NodeRED-6.png "MbSN Node RED Imported Flow")
 
-**Issues**
+#### Issues
 
-- **The *Gateway* Micro:bit is Showing as "not connected"**
+##### The *Gateway* Micro:bit is Showing as "not connected"
 ![MbSN Node RED Serial Not Connected](Images/MbSN-NodeRED-7.png "MbSN Node RED Serial Not Connected")
 
 This is usually caused by the Raspberry Pi loading the Micro:bit's serial port as a different device address to the one defined in the Node-RED flow imported. If this has happened it's just a process of finding what the correct device address is. First open up an SSH connection to your Raspberry Pi or a terminal window from the desktop and enter the following commands.
@@ -135,7 +141,7 @@ In the properties panel that has appeared on the right click the pencil edit ico
  
 Now updated the Serial Port to be the /dev/... that you identified above. Go back to the flow view by clicking the red Updated and then Done buttons. Finally remember to deploy your changes by clicking the red Deploy button. Hopefully by this point your serial node should be showing connected.
 
-- **No Information is Being Shown in the Browser**
+##### No Information is Being Shown in the Browser
 
 If this is happening then there is a debug node directly above the final node in the flow that will display all the information being received into a debug window. First thing to check is that the visual indicators on both the *Sensor* and *Gateway* Micro:bits are toggling. If the *Sensor* isn't showing, check the frequency of the information being sent, is it too long? If the *Gateway* isn't showing, check the Radio Groups group being used, are the *Sensor* and *Gateway* using the same? If both are toggling then we can see what messages are being received.
 
