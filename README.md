@@ -5,6 +5,14 @@ Contents
 - [Micro:bit Sensor Network (v1.0)](#microbit-sensor-network-v10 "Micro:bit Sensor Network (v1.0)")
 	- [Why](#why "Why")
 	- [The Future](#the-future "The Future")
+- []( "")
+	- [Hardware Design](#hardware-design "Hardware Design")
+	- [Software Stack](#software-stack "Software Stack")
+		- [The Sensor Micro:bits](#the-sensor-microbits "The Sensor Micro:bits")
+		- [The Gateway Micro:bit](#the-gateway-microbit "The Gateway Micro:bit")
+		- [Node-RED](#node-red "Node-RED")
+		- [Browser Based Front-end](#browser-based-front-end "Browser Based Front-end")
+	- [Everything Working](#everything-working "Everything Working")
 
 Welcome to the Micro:bit Sensor Network (MbSN), a way to let children play and explore the idea of using Micro:bits as remote devices to capture and share their inputs in real time. These inputs are displayed numerically and as charts wirelessly and in real time using a Raspberry Pi and a browser. 
 
@@ -31,7 +39,7 @@ Again hopefully a simple approach to the software used, well right up until the 
 ### The *Sensor* Micro:bits
 This GitHub repository contains three example sensors. Each of them uses the Micro:bits own internal inputs and then sends the information at different frequencies. The information is sent as a name and value. This method limits the length of the names being sent to a maximum of 8 characters and the associated value can only be numeric. The examples use Radio Group 123 but if you do change this remember to change the Radio Group used by the *gateway* Micro:bit to match. The inclusion of the toggle block is only there to provide a visual indicator that information is being sent. After seeing the three example sensor .hex files it should be easy to create your own sensors using more complex scenarios and / or external sensors.
 
-1. Acceleration
+#### 1. Acceleration
 ![MbSN Acceleration Sensor](Images/MbSN-Blocks-Acceleration.png "MbSN Acceleration Sensor")
 
 After initialising the Radio Group to 123, the acceleration strength value, a combination of the X, Y & Z values, is sent 10 times a second (every 100ms). Download the [MbSN-Acceleration.hex](Microbit/MbSN-Acceleration.hex "MbSN-Acceleration.hex") .hex file ready to be loaded onto a Micro:bit.
