@@ -68,7 +68,7 @@ To stop this from happening run the following command:
 
 	sudo systemctl disable nodered.service
 
-####**BEFORE PERFORMING THE FOLLOWING STEPS MAKE SURE YOU HAVE CONNECTED YOUR *GATEWAY* MICRO:BIT TO THE RASPBERRY PI**
+**BEFORE PERFORMING THE FOLLOWING STEPS MAKE SURE YOU HAVE CONNECTED YOUR *GATEWAY* MICRO:BIT TO THE RASPBERRY PI**
 
 Once you have everything running then open a browser and visit either http://localhost:1880 if you are using your Raspberry Pi or http://\<The Name of your Raspberry Pi\>:1880 if you are using another machine on the same network. If everything has worked correctly you should be presented with the page below.
 
@@ -94,9 +94,9 @@ This flow is also not ready to be used as once any changes have been made in the
 
 ![MbSN Node RED Imported Flow](Images/MbSN-NodeRED-6.png "MbSN Node RED Imported Flow")
 
-####Issues
+**Issues**
 
-#####The *Gateway* Micro:bit is Showing as "not connected"
+- **The *Gateway* Micro:bit is Showing as "not connected"**
 ![MbSN Node RED Serial Not Connected](Images/MbSN-NodeRED-7.png "MbSN Node RED Serial Not Connected")
 
 This is usally caused by the Raspberry Pi loading the Micro:bit's serial port as a different device address to the one defined in the Node-RED flow imported. If this has happend it's just a process of finding what the correct device address is. First open up an SSH connection to your Raspberry Pi or a terminal window from the desktop and enter the following commands.
@@ -120,7 +120,8 @@ In the properties panel that has appeared on the right click the pencil edit ico
  
 Now updated the Serial Port to be the /dev/... that you identified above. Go back to the flow view by clicking the red Updated and then Done buttons. Finally remember to deploy your changes by clicking the red Deploy button. Hopefully by this point your serial node should be showing connected.
 
-#####No Information is Being Shown in the Browser
+- **No Information is Being Shown in the Browser**
+
 If this is happening then there is a debug node directly above the final node in the flow that will display all the information being received into a debug window. First thing to check is that the visual indicators on both the *Sensor* and *Gateway* Micro:bits are toggling. If the *Sensor* isn't showing check the frequency of the information being sent, is it too long? If the *Gateway* isn't showing check the Radio Groups group being used, are the *Sensor* and *Gateway* are using the same? If both are toggling then we can see what messages are being received.
 
 First hover you mouse over the middle right hand edge of the flow window in the browser and a tab should pop out, click this tab.
@@ -140,4 +141,6 @@ Once clicked the button will popout and change from grey to the same green as th
 ![MbSN Node RED Edit Serial Properties](Images/MbSN-NodeRED-13.png "MbSN Node RED Edit Serial Properties")
 
 From here any information that is being sent to the WebSocket node is also sent to the Debug node. Hopefully this will give you an insight to what information is / isn't being sent.
+
+### Browser Based Front-end
 
