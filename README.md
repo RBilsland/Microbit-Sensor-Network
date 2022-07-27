@@ -70,16 +70,16 @@ After redirecting the serial connection to be over USB, setting the serial baud 
 ### Node-RED
 Whether Node-RED is or isn't already installed on your Raspberry Pi doesn't matter as the script they provided can perform both installs and updates. Even if you believe you have Node-RED setup on your Raspberry Pi it could still be worth checking as recently they have released version 3. If you have any issues installing or updating you can find further help at Node-REDs [Running on Raspberry Pi](https://nodered.org/docs/getting-started/raspberrypi "Running on Raspberry Pi") guide.
 
-As the Node-RED interface is viewed in a browser the following command can either be run through an SSH connection to your Raspberry Pi or through a terminal window from the desktop.
+As the Node-RED interface is viewed in a browser the following command can either be run through an SSH connection to your Raspberry Pi or through a terminal window from the desktop:
 
 	bash <(curl -sL https://raw.githubusercontent.com/node-red/linux-installers/master/deb/update-nodejs-and-nodered)
 	
 Once the script has run successfully you will have the latest version of Node-RED installed and as part of the process the following commands have been installed to help manage running Node-RED.
 
-- `node-red-start` - this starts the Node-RED service and displays its log output. Pressing Ctrl-C or closing the window does not stop the service; it keeps running in the background
-- `node-red-stop` - this stops the Node-RED service
-- `node-red-restart` - this stops and restarts the Node-RED service
-- `node-red-log` - this displays the log output of the service
+- `node-red-start` - this starts the Node-RED service and displays its log output. Pressing Ctrl-C or closing the window does not stop the service; it keeps running in the background.
+- `node-red-stop` - this stops the Node-RED service.
+- `node-red-restart` - this stops and restarts the Node-RED service.
+- `node-red-log` - this displays the log output of the service.
 
 It's quite often useful to have Node-RED automatically start when your Raspberry Pi is turned on or is re-booted. To make this happen run the following command:
 
@@ -120,12 +120,12 @@ This flow is also not ready to be used as once any changes have been made in the
 ##### The *Gateway* Micro:bit is Showing as "not connected"
 ![MbSN Node RED Serial Not Connected](Images/MbSN-NodeRED-7.png "MbSN Node RED Serial Not Connected")
 
-This is usually caused by the Raspberry Pi loading the Micro:bit's serial port as a different device address to the one defined in the Node-RED flow imported. If this has happened it's just a process of finding what the correct device address is. First open up an SSH connection to your Raspberry Pi or a terminal window from the desktop and enter the following commands.
+This is usually caused by the Raspberry Pi loading the Micro:bit's serial port as a different device address to the one defined in the Node-RED flow imported. If this has happened it's just a process of finding what the correct device address is. First open up an SSH connection to your Raspberry Pi or a terminal window from the desktop and enter the following commands:
 
 	cd /dev/serial/by-id
 	ls -al | grep micro:bit
 
-This should return a line similar to the output below and the important bit is the final text after the -> or in this case ../../ttyACM0.
+This should return a line similar to the output below and the important bit is the final text after the -> or in this case ../../ttyACM0:
 
 `lrwxrwxrwx 1 root root 13 Jul 25 22:47 usb-ARM\_\_BBC\_micro:bit\_CMSIS-DAP\_\_9904360254174e45000b000400000050000000009796990b-if01 -> ../../ttyACM0`
 
@@ -164,7 +164,7 @@ Once clicked the button will pop out and change from grey to the same green as t
 From here any information that is being sent to the WebSocket node is also sent to the Debug node. Hopefully this will give you an insight to what information is / isn't being sent.
 
 ### Browser Based Front-end
-This web page does not need to be served from a web server. Download the [Microbit-Sensor-Network.html](Web/Microbit-Sensor-Network.html "Microbit-Sensor-Network.html") .html file and double click it in your file explorer to view it in your browser. If you are viewing this page on your Raspberry Pi then there is nothing to change, but if you are using another machine on the same network then you'll need to change the following line at the top of the .html file from "localhost" to the name of your Raspberry Pi
+This web page does not need to be served from a web server. Download the [Microbit-Sensor-Network.html](Web/Microbit-Sensor-Network.html "Microbit-Sensor-Network.html") .html file and double click it in your file explorer to view it in your browser. If you are viewing this page on your Raspberry Pi then there is nothing to change, but if you are using another machine on the same network then you'll need to change the following line at the top of the .html file from "localhost" to the name of your Raspberry Pi:
 
 	const wsServerURL = "ws://localhost:1880/";
 
@@ -190,7 +190,7 @@ The Temperature shows even less pieces of information at 30 due to it sending in
 
 Each chart can be collapsed by clicking it to return back to the information bar view. 
 
-If you wish to add your own sensor types then at the bottom of the .html file there is a config function that provides all the required settings. Currently it has the configurations for Acceleration, Light Level and Temperature and looks like this
+If you wish to add your own sensor types then at the bottom of the .html file there is a config function that provides all the required settings. Currently it has the configurations for Acceleration, Light Level and Temperature and looks like this:
 
 	function configLookup(name) {
 		/*
@@ -241,7 +241,7 @@ If you wish to add your own sensor types then at the bottom of the .html file th
 		return config;
 	}
 	
-For example to add a Compass sensor we would add our own section below the Temperature section and override the default configuration values.
+For example to add a Compass sensor we would add our own section below the Temperature section and override the default configuration values:
 
 			case "compass":
 				config.fullName = "Compass Heading";
@@ -254,11 +254,11 @@ The name of the sensor is always entered here in lower case and we provide overr
 
 ## Everything Working?
 
-If you've read this far then firstly well done, but have you read this far before starting anything or after you've realised somethings not working? If everything is working then my sensor hardware looked like this
+If you've read this far then firstly well done, but have you read this far before starting anything or after you've realised somethings not working? If everything is working then my sensor hardware looked like this.
 
 ![MbSN Micro:bit Sensors](Images/MbSN-Three-Microbits.jpg "MbSN Micro:bit Sensors")
 
-And my gateway and Raspberry Pi hardware looked like this
+And my gateway and Raspberry Pi hardware looked like this.
 
 ![MbSN Micro:bit Gateway and Raspberry Pi](Images/MbSN-RaspberryPi-Microbit.jpg "MbSN Micro:bit Gateway and Raspberry Pi")
 
