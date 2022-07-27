@@ -3,7 +3,7 @@
 **Contents**
 
 - [Micro:bit Sensor Network (v1.0)](#microbit-sensor-network-v10 "Micro:bit Sensor Network (v1.0)")
-	- [Why](#why "Why")
+	- [Why?](#why "Why?")
 	- [The Future](#the-future "The Future")
 - [The Setup](#the-setup "The Setup")
 	- [Hardware Design](#hardware-design "Hardware Design")
@@ -18,7 +18,7 @@
 				- [The *Gateway* Micro:bit is Showing as \"not connected\"](#the-gateway-microbit-is-showing-as-not-connected "The *Gateway* Micro:bit is Showing as \"not connected\"")
 				- [No Information is Being Shown in the Browser](#no-information-is-being-shown-in-the-browser "No Information is Being Shown in the Browser")
 		- [Browser Based Front-end](#browser-based-front-end "Browser Based Front-end")
-	- [Everything Working](#everything-working "Everything Working")
+	- [Everything Working?](#everything-working "Everything Working?")
 
 Welcome to the Micro:bit Sensor Network (MbSN), a way to let children play and explore the idea of using Micro:bits as remote devices to capture and share their inputs in real time. These inputs are displayed numerically and as charts wirelessly and in real time using a Raspberry Pi and a browser. 
 
