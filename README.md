@@ -126,21 +126,94 @@ If this is happening then there is a debug node directly above the final node in
 
 First hover you mouse over the middle right hand edge of the flow window in the browser and a tab should pop out, click this tab.
 
-![MbSN Node RED Edit Serial Properties](Images/MbSN-NodeRED-10.png "MbSN Node RED Edit Serial Properties")
+![MbSN Node RED Right Hand Tab](Images/MbSN-NodeRED-10.png "MbSN Node RED Right Hand Tab")
 
 Now with the right hand panel visible click the little insect / bug icon in the top of it so that it shows debug information.
 
-![MbSN Node RED Edit Serial Properties](Images/MbSN-NodeRED-11.png "MbSN Node RED Edit Serial Properties")
+![MbSN Node RED Right Hand Debug Panel](Images/MbSN-NodeRED-11.png "MbSN Node RED Right Hand Debug Panel")
 
 Next on the right hand end of the green debug node there appear to be a little grey button half sticking out from behind it. Click this button.
 
-![MbSN Node RED Edit Serial Properties](Images/MbSN-NodeRED-12.png "MbSN Node RED Edit Serial Properties")
+![MbSN Node RED Enable Debug](Images/MbSN-NodeRED-12.png "MbSN Node RED Enable Debug")
 
 Once clicked the button will popout and change from grey to the same green as the rest of the debug button.
 
-![MbSN Node RED Edit Serial Properties](Images/MbSN-NodeRED-13.png "MbSN Node RED Edit Serial Properties")
+![MbSN Node RED Debug Information](Images/MbSN-NodeRED-13.png "MbSN Node RED Debug Information")
 
 From here any information that is being sent to the WebSocket node is also sent to the Debug node. Hopefully this will give you an insight to what information is / isn't being sent.
 
 ### Browser Based Front-end
+This web page does not need to be served from a webserver. Download the [Microbit-Sensor-Network.html](Web/Microbit-Sensor-Network.html "Microbit-Sensor-Network.html") .html file and double click it in your file explore to view it in your browser. If you are viewing this page on your Raspberry Pi then there is nothing to change, but if you are using another machine on the same network then you'll need to change the following line at the top of the .html file from "localhost" to the name of your Raspberry Pi
 
+	const wsServerURL = "ws://localhost:1880/";
+
+With no *Sensor* Micro:bits sending information the page should look like the following.
+
+![MbSN Front-end Waiting](Images/MbSN-FrontEnd-Waiting.png "MbSN Front-end Waiting")
+
+Once a *Sensor* Micro:bit is sending information then the page will automatically update to show a information bar for that type of sensor information. The following image shows the page receiving information from all three types of *Sensor* Micro:bits.
+
+![MbSN Front-end Collapsed](Images/MbSN-FrontEnd-Collapsed.png "MbSN Front-end Collapsed")
+
+Each of the sensor types are expandable by clicking on them. Once expanded they will show a scrolling chart of information. Each type is configurable to show different amounts of charted information. In these examples the Acceleration is showing the last 100 pieces of information because of the frequency that this information is received.
+
+![MbSN Front-end Acceleration](Images/MbSN-FrontEnd-Acceleration.png "MbSN Front-end Acceleration")
+
+The Light Level shows the last 50 pieces of information due to it sending information at a slower frequency than Acceleration.
+
+![MbSN Front-end Light Level](Images/MbSN-FrontEnd-LightLevel.png "MbSN Front-end Light Level")
+
+The Temperature shows even less pieces of information at 30 due to it sending information even slower than the Light Level sensor.
+
+![MbSN Front-end Temperature](Images/MbSN-FrontEnd-Temperature.png "MbSN Front-end Temperature")
+
+If you wish to add your own sensor types then at the bottom of the .html file there is a config function that provides all the required settings. Currently it has the configurations for Acceleration, Light Level and Temperature and looks like this
+
+	function configLookup(name) {
+		/*
+		The section below is configurable for each message name.
+
+		Message names can only be a maximum of 8 characters (a Micro:bit limitation).
+		The names displayed are the associated full names.
+		Colours are in RGB hexidecimal format.
+		If the min / max values are left undefined then the charts will automatically size themselves.
+		The max buffer size is the number of values displayed on the chart before being scrolled.
+		Any values not overriden will just fall back to the default values at the top.
+		*/
+
+		var config = {
+			fullName: "Unknown (" + name + ")",
+			lineColour: "#000000",
+			minValue: undefined,
+			maxValue: undefined,
+			valueUnit: "",
+			maxBufferSize: 30
+		}
+
+		switch(name.toLowerCase()) {
+			case "accelera":
+				config.fullName = "Acceleration";
+				config.lineColour = "#FF0000";
+				config.minValue = 0;
+				config.maxValue = 3500;
+				config.valueUnit = "mg";
+				config.maxBufferSize = 100;
+				break;
+			case "lightlev":
+				config.fullName = "Light Level";
+				config.lineColour = "#00FF00";
+				config.minValue = 0;
+				config.maxValue = 255;
+				config.maxBufferSize = 50;
+				break;
+			case "temperat":
+				config.fullName = "Temperature";
+				config.lineColour = "#0000FF";
+				config.minValue = -5;
+				config.maxValue = 50;
+				config.valueUnit = "°C";
+				break;
+		}
+		    
+		return config;
+	}
