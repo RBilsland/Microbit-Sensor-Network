@@ -149,23 +149,25 @@ This web page does not need to be served from a webserver. Download the [Microbi
 
 With no *Sensor* Micro:bits sending information the page should look like the following.
 
-![MbSN Front-end Waiting](Images/MbSN-FrontEnd-Waiting.png "MbSN Front-end Waiting")
+![MbSN Front-end Waiting](Images/MbSN-Frontend-Waiting.png "MbSN Front-end Waiting")
 
 Once a *Sensor* Micro:bit is sending information then the page will automatically update to show a information bar for that type of sensor information. The following image shows the page receiving information from all three types of *Sensor* Micro:bits.
 
-![MbSN Front-end Collapsed](Images/MbSN-FrontEnd-Collapsed.png "MbSN Front-end Collapsed")
+![MbSN Front-end Collapsed](Images/MbSN-Frontend-Collapsed.png "MbSN Front-end Collapsed")
 
 Each of the sensor types are expandable by clicking on them. Once expanded they will show a scrolling chart of information. Each type is configurable to show different amounts of charted information. In these examples the Acceleration is showing the last 100 pieces of information because of the frequency that this information is received.
 
-![MbSN Front-end Acceleration](Images/MbSN-FrontEnd-Acceleration.png "MbSN Front-end Acceleration")
+![MbSN Front-end Acceleration](Images/MbSN-Frontend-Acceleration.png "MbSN Front-end Acceleration")
 
 The Light Level shows the last 50 pieces of information due to it sending information at a slower frequency than Acceleration.
 
-![MbSN Front-end Light Level](Images/MbSN-FrontEnd-LightLevel.png "MbSN Front-end Light Level")
+![MbSN Front-end Light Level](Images/MbSN-Frontend-LightLevel.png "MbSN Front-end Light Level")
 
 The Temperature shows even less pieces of information at 30 due to it sending information even slower than the Light Level sensor.
 
-![MbSN Front-end Temperature](Images/MbSN-FrontEnd-Temperature.png "MbSN Front-end Temperature")
+![MbSN Front-end Temperature](Images/MbSN-Frontend-Temperature.png "MbSN Front-end Temperature")
+
+Each chart can be collapsed by clicking it to return back to the information bar view. 
 
 If you wish to add your own sensor types then at the bottom of the .html file there is a config function that provides all the required settings. Currently it has the configurations for Acceleration, Light Level and Temperature and looks like this
 
